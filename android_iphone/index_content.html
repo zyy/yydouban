@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="css/ui-input.css">
+        <link rel="stylesheet" href="css/ui-tab.css">
+        <link rel="stylesheet" href="css/ui-img.css">
+        <link rel="stylesheet" href="css/ui-res.css">
+        <link rel="stylesheet" href="css/ui-list.css">
+        <link rel="stylesheet" href="css/ui-base.css">
+        <link rel="stylesheet" href="css/ui-box.css">
+        <link rel="stylesheet" href="css/ui-color.css">
+        <link rel="stylesheet" href="css/ui-btn.css">
+        <link rel="stylesheet" href="css/ui-tab.css">
+        <script src="js/zy_control.js">
+        </script>
+        <script src="js/zy_click.js">
+        </script>
+    </head>
+    <body class="um-vp c-wh c-gra" ontouchstart>
+        <!--列表开始-->
+        <div class="uba  b-gra c-wh us uc-a " style="margin:0.5em">
+            <div ontouchstart="zy_touch('btn-act')" onclick="newBook()" class="uc-t ubb ub b-gra c-m2 t-bla ub-ac umh4 lis">
+                <img src="css/images/icon_book.png" style="margin-right:0.5em">
+                <div class="ub-f1 ut-s">
+                    新书推荐...
+                </div>
+                <div class="res8 lis-sw ub-img">
+                </div>
+            </div>
+            <div ontouchstart="zy_touch('btn-act')" onclick="newMusic()" class=" ub ubb b-gra c-m2 t-bla ub-ac umh4 lis">
+                <img src="css/images/icon_music.png" style="margin-right:0.5em">
+                <div class="ub-f1 ut-s">
+                    热碟速递...
+                </div>
+                <div class="res8 lis-sw ub-img">
+                </div>
+            </div>
+            <div ontouchstart="zy_touch('btn-act')" onclick="newMovie()" class=" ub ubb b-gra c-m2 t-bla ub-ac umh4 lis">
+                <img src="css/images/icon_movice.png" style="margin-right:0.5em">
+                <div class="ub-f1 ut-s">
+                    影院热映...
+                </div>
+                <div class="res8 lis-sw ub-img">
+                </div>
+            </div>
+            <div ontouchstart="zy_touch('btn-act')" onclick="searchHot()" class=" ub ubb b-gra c-m2 t-bla ub-ac umh4 lis">
+                <img src="css/images/icon_miniblog.png" style="margin-right:0.5em">
+                <div class="ub-f1 ut-s">
+                    我的豆瓣...
+                </div>
+                <div class="res8 lis-sw ub-img">
+                </div>
+            </div>
+            <div ontouchstart="zy_touch('btn-act')" onclick="onlines()" class=" ub ubb b-gra c-m2 t-bla ub-ac umh4 lis">
+                <img src="css/images/icon_new_miniblog.png" style="margin-right:0.5em">
+                <div class="ub-f1 ut-s">
+                    线上活动...
+                </div>
+                <div class="res8 lis-sw ub-img">
+                </div>
+            </div>
+            <!--<div ontouchstart="zy_touch('btn-act')" onclick="album()" class=" ub ubb b-gra c-m2 t-bla ub-ac umh4 lis">
+                <img src="css/images/icon_new_miniblog.png" style="margin-right:0.5em">
+                <div class="ub-f1 ut-s">
+                    我的相册...
+                </div>
+                <div class="res8 lis-sw ub-img">
+                </div>
+            </div>
+            <div ontouchstart="zy_touch('btn-act')" onclick="myDiary()" class=" ub ubb b-gra c-m2 t-bla ub-ac umh4 lis">
+                <img src="css/images/icon_miniblog.png" style="margin-right:0.5em">
+                <div class="ub-f1 ut-s">
+                    我的日记...
+                </div>
+                <div class="res8 lis-sw ub-img">
+                </div>
+            </div>
+            <div ontouchstart="zy_touch('btn-act')" class="uc-b c-m2 ub  t-bla ub-ac umh4 lis">
+                <img src="css/images/icon_group.png" style="margin-right:0.5em">
+                <div class="ub-f1 ut-s">
+                    我的资料...
+                </div>
+                <div class="res8 lis-sw ub-img">
+                </div>
+            </div>-->
+        </div>
+        <!--列表结束-->
+    </body>
+    <script>
+        zy_init();
+        window.uexOnload = function(type){
+            uexXmlHttpMgr.onData = httpSuccess;
+            
+            uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+                alert("errorCode:" + errorCode + "\n" + "errorInfo:" + errorInfo);
+            }
+            
+        }
+        
+        function httpSuccess(opid, status, result){
+            if (status == 1) {
+                if (opid == 1) {
+                    uexXmlHttpMgr.close(opid);
+                    var jsonData = eval("(" + result + ")");
+                    localStorage.authorization_code = jsonData.access_token;
+                    var name = "index";
+                    uexWindow.open(name, "0", name + ".html", "", "", "", 0);
+                }
+                else 
+                    if (opid == 2) {
+                        uexXmlHttpMgr.close(opid);
+                        uexWindow.closeToast();
+                        localStorage.newMovies = result;
+                        var name = "movie_new";
+                        uexWindow.open(name, "0", 'movie/' + name + ".html", 1, "", "", 128);
+                    }
+                    else 
+                        if (opid == 3) {
+                            uexXmlHttpMgr.close(opid);
+                            uexWindow.closeToast();
+                            localStorage.newMusics = result;
+                            var name = "music_new";
+                            uexWindow.open(name, "0", 'music/' + name + ".html", 1, "", "", 128);
+                        }
+                        else 
+                            if (opid == 4) {
+                                uexXmlHttpMgr.close(opid);
+                                uexWindow.closeToast();
+                                localStorage.newBooks = result;
+                                var name = "book_new";
+                                uexWindow.open(name, "0", 'book/' + name + ".html", 1, "", "", 128);
+                            }
+                            else 
+                                if (opid == 5) {
+                                    uexXmlHttpMgr.close(opid);
+                                    uexWindow.closeToast();
+                                    localStorage.myDiary = result;
+                                    var name = "my_diary";
+                                    uexWindow.open(name, "0", 'diary/' + name + ".html", 1, "", "", 128);
+                                }
+            }
+            else 
+                if (status == -1) {
+                    uexXmlHttpMgr.close(opid);
+                    alert("网络超时");
+                }
+        }
+        
+        function onAuth(winNam, url){
+            if (winNam == "login") {
+                if (url.indexOf("http://blog.csdn.net/yycoder") == 0) {
+                    var key = url.match(/http:\/\/blog.csdn.net\/yycoder\?code=(.*)/);
+                    var tokenUrl = "https://www.douban.com/service/auth2/token";
+                    uexXmlHttpMgr.open(1, "POST", tokenUrl, 40 * 1000);
+                    uexXmlHttpMgr.setPostData(1, "0", "client_id", "0ca14c051c65391925e3e40f552fab4b");
+                    uexXmlHttpMgr.setPostData(1, "0", "client_secret", "d160318b83d4be7f");
+                    uexXmlHttpMgr.setPostData(1, "0", "redirect_uri", "http://blog.csdn.net/yycoder");
+                    uexXmlHttpMgr.setPostData(1, "0", "grant_type", "authorization_code");
+                    uexXmlHttpMgr.setPostData(1, "0", "code", key[1]);
+                    uexXmlHttpMgr.send(1);
+                }
+            }
+        }
+        
+        function login(){
+            uexWindow.onOAuthInfo = onAuth;
+            uexWindow.open("login", "0", "https://www.douban.com/service/auth2/auth?client_id=0ca14c051c65391925e3e40f552fab4b&redirect_uri=http://blog.csdn.net/yycoder&response_type=code", "", "", "", "1");
+        }
+        
+        function newMovie(){
+            //%E7%83%AD%E6%98%A0中文：热映
+            var server = "https://api.douban.com/v2/movie/search?tag=%E7%83%AD%E6%98%A0";
+            uexWindow.toast(2, 5, "正在查询数据。。。", 0);
+            uexXmlHttpMgr.open(2, "GET", server, 40 * 1000);
+            uexXmlHttpMgr.send(2);
+        }
+        
+        function newMusic(){
+            //%E7%83%AD%E9%97%A8 中文：热门
+            var server = "https://api.douban.com/v2/music/search?tag=%E7%83%AD%E9%97%A8";
+            uexWindow.toast(3, 5, "正在查询数据。。。", 0);
+            uexXmlHttpMgr.open(3, "GET", server, 40 * 1000);
+            uexXmlHttpMgr.send(3);
+        }
+        
+        function newBook(){
+            //%E7%83%AD%E9%97%A8 中文：热门
+            var server = "https://api.douban.com/v2/book/search?tag=%E7%83%AD%E9%97%A8";
+            uexWindow.toast(4, 5, "正在查询数据。。。", 0);
+            uexXmlHttpMgr.open(4, "GET", server, 40 * 1000);
+            uexXmlHttpMgr.send(4);
+        }
+        
+        //线上活动
+        function onlines(){
+            var name = "onlines";
+            uexWindow.open(name, "0", name + "/" + name + ".html", "", "", "", 0);
+        }
+        
+        //我的相册
+        function album(){
+            var name = "my_album";
+            uexWindow.open(name, "0", "album/" + name + ".html", "", "", "", 0);
+        }
+        
+        function searchHot(){
+            var name = "search";
+            uexWindow.open(name, "0", name + "/" + name + ".html", "", "", "", 0);
+        }
+        
+        function myDiary(){
+            var name = "diary_me";
+            uexWindow.open(name, "0", "diary/" + name + ".html", "", "", "", 0);
+        }
+    </script>
+</html>

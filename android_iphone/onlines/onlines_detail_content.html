@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-input.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-img.css">
+        <link rel="stylesheet" href="../css/ui-res.css">
+        <link rel="stylesheet" href="../css/ui-list.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/ui-btn.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-mystyle.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+        <script src="../js/zy_anim.js">
+        </script>
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_tmpl.js">
+        </script>
+    </head>
+    <body class="um-vp" ontouchstart>
+    <body>
+        <div id="bookDetail" style="margin:0.4em">
+        </div>
+    </body>
+    <script>
+        window.uexOnload = function(type){
+            if (!type) {
+                uexWindow.setBounce("1");
+                uexWindow.showBounceView("0", "#FFF", "0");
+                uexWindow.showBounceView("1", "#FFF", "0");
+            }
+            uexXmlHttpMgr.onData = httpSuccess;
+            uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+                alert("errorCode:" + errorCode + "\n" + "errorInfo:" + errorInfo);
+            }
+            var server = "https://api.douban.com/v2/online/" + localStorage.onlines_detailId;
+            uexWindow.toast(1, 5, "正在查询数据。。。", 0);
+            uexXmlHttpMgr.open(1, "GET", encodeURI(server), 40 * 1000);
+            uexXmlHttpMgr.send(1);
+        }
+        
+        function imagesView(cur){
+            images = localStorage.images.split(',');
+            uexImageBrowser.open(images);
+            
+            //            localStorage.curImage = cur;
+            //            uexWindow.evaluateScript('onlines_detail', '0', 'imagesView()');
+        }
+        
+        function httpSuccess(opid, status, result){
+            if (status == 1) {
+                if (opid == 1) {
+                    var jsonData = eval("(" + result + ")");
+                    var html = '';
+                    var tags = '';
+                    for (var i = 0; i < jsonData.tags.length; i++) {
+                        tags += jsonData.tags[i] + ' ';
+                    }
+                    html += '<div class="tx-c c-blu ulev1 " style="margin-top:0.2em;background-color:#E6E6E6;">' + jsonData.title +
+                    '</div><div class="ub ub-rev umh5" style="margin-top:0.4em"><div class="ub-f2 ulev-1" style="word-wraps"><a class="t-gra">开始时间:</a>' +
+                    jsonData.begin_time +
+                    '<br><a class="t-gra">结束时间:</a>' +
+                    jsonData.end_time +
+                    '<br><a class="t-gra">发起人:</a>' +
+                    jsonData.owner.name +
+                    '<br><a class="t-gra">类型标签:</a>' +
+                    tags +
+                    '<br>' +
+                    jsonData.participant_count +
+                    '人参加' +
+                    '</div><div class="ub-f2" style="min-width:5em;max-width:5em"><img style="margin-left:0.3em" class="us" src=\"' +
+                    jsonData.icon +
+                    '\"/></div></div>' +
+                    '<div class="tx-l c-blu ulev1 " style="margin-top:0.4em;background-color:#E6E6E6;">活动介绍...</div >' +
+                    '<div class="ulev-1" style="margin-top:0.4em">' +
+                    jsonData.desc +
+                    '</div><div class="tx-l c-blu ulev1 " style="margin-top:0.4em;background-color:#E6E6E6;">活动照片...<a herf="">(全部' +
+                    jsonData.photo_count +
+                    '张)</a></div >' +
+                    '<div class="ulev-1" style="margin-top:0.4em" id="photos"></div>' +
+                    '<div class="tx-l c-blu ulev1 " style="margin-top:0.4em;background-color:#E6E6E6;">线上活动论坛...</div >' +
+                    '<div class="uba  b-gra c-wh us uc-n" style="margin-top:0.4em;margin-bottom:0.6em" id="discussions"></div>' +
+                    '</div><div class="tx-l c-blu ulev1 " style="margin-top:0.4em;background-color:#E6E6E6;">参与该活动的成员...</div >' +
+                    '<div class="ulev-1 ub ub-rev" style="margin-top:0.4em" id="users"></div>';
+                    $$("bookDetail").innerHTML = html;
+                    uexXmlHttpMgr.close(opid);
+                    uexWindow.closeToast();
+                    
+                    var server1 = "https://api.douban.com/v2/online/" + jsonData.id + "/photos";
+                    uexWindow.toast(2, 5, "正在查询数据。。。", 0);
+                    uexXmlHttpMgr.open(2, "GET", encodeURI(server1), 40 * 1000);
+                    uexXmlHttpMgr.send(2);
+                    
+                    var server2 = "https://api.douban.com/v2/online/" + jsonData.id + "/discussions";
+                    uexWindow.toast(3, 5, "正在查询数据。。。", 0);
+                    uexXmlHttpMgr.open(3, "GET", encodeURI(server2), 40 * 1000);
+                    uexXmlHttpMgr.send(3);
+                    
+                    var server3 = "https://api.douban.com/v2/online/" + jsonData.id + "/participants";
+                    uexWindow.toast(4, 5, "正在查询数据。。。", 0);
+                    uexXmlHttpMgr.open(4, "GET", encodeURI(server3), 40 * 1000);
+                    uexXmlHttpMgr.send(4);
+                }
+                else 
+                    if (opid == 2) {
+                        var jsonData = eval("(" + result + ")");
+                        var html = '';
+                        var length = 0;
+                        if (jsonData.photos.length > 4) {
+                            length = 4;
+                        }
+                        else {
+                            length = jsonData.photos.length;
+                        }
+                        for (var i = 0; i < length; i++) {
+                            html += '<div class="ub ub-ver " onclick = "imagesView(' + i + ')">' +
+                            '<img style="margin-left:0.3em" class="us" src=\"' +
+                            jsonData.photos[i].thumb +
+                            '\"/>' +
+                            '<div style="word-wraps">来自  ' +
+                            jsonData.photos[i].author.name +
+                            '</div></div>';
+                        }
+                        $$("photos").innerHTML = html;
+                        
+                        var images = new Array(jsonData.photos.length);
+                        for (var i = 0; i < jsonData.photos.length; i++) {
+                            images[i] = jsonData.photos[i].thumb;
+                        }
+                        localStorage.images = images;
+                        
+                        uexXmlHttpMgr.close(opid);
+                        uexWindow.closeToast();
+                    }
+                    else 
+                        if (opid == 3) {
+                            var jsonData = eval("(" + result + ")");
+                            var html = '';
+                            var length = 0;
+                            if (jsonData.discussions.length > 8) {
+                                length = 8;
+                            }
+                            else {
+                                length = jsonData.discussions.length;
+                            }
+                            for (var i = 0; i < length; i++) {
+                                html += '<div ontouchstart="zy_touch(\'btn-act\')" class="uc-t c-m2 ubb ub b-gra t-bla ub-ac lis" onclick="discussion(' + jsonData.discussions[i].id + ')"><div class="ulev-1 b-gra">' +
+                                jsonData.discussions[i].title +
+                                '<br>来自' +
+                                jsonData.discussions[i].author.name +
+                                '</div></div>';
+                            }
+                            html += '<div class="ulev-1 tx-r" style="margin-top:0.4em;margin-bottom:0.6em"><a href="">浏览更多话题</a></div>'
+                            $$("discussions").innerHTML = html;
+                            
+                            uexXmlHttpMgr.close(opid);
+                            uexWindow.closeToast();
+                        }
+                        else 
+                            if (opid == 4) {
+                                var jsonData = eval("(" + result + ")");
+                                var html = '';
+                                var length = 0;
+                                if (jsonData.users.length > 15) {
+                                    length = 15;
+                                }
+                                else {
+                                    length = jsonData.users.length;
+                                }
+                                for (var i = 0; i < length; i++) {
+                                    html += '<div class="ub ub-ver ">' +
+                                    '<div style="word-wraps"><a class="t-blu" >' +
+                                    jsonData.users[i].name +
+                                    '</a></div>' +
+                                    '<img style="margin-left:0.3em" class="us" src=\"' +
+                                    jsonData.users[i].avatar +
+                                    '\"/>';
+                                    if ((i + 1 % 4) == 0) {
+                                        html += '<br>';
+                                    }
+                                    html += '</div>';
+                                }
+                                $$("users").innerHTML = html;
+                                
+                                uexXmlHttpMgr.close(opid);
+                                uexWindow.closeToast();
+                            }
+            }
+            else 
+                if (status == -1) {
+                    alert("网络超时");
+                }
+        }
+        
+        function discussion(discussion_id){
+            localStorage.discussion_id = discussion_id;
+            uexWindow.open('discussion', '0', '../discussion/discussion.html', '1', '', '', '0');
+        }
+    </script>
+</html>

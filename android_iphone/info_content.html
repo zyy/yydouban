@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="css/ui-img.css">
+        <link rel="stylesheet" href="css/ui-list.css">
+        <link rel="stylesheet" href="css/ui-base.css">
+        <link rel="stylesheet" href="css/ui-box.css">
+        <link rel="stylesheet" href="css/ui-color.css">
+        <link rel="stylesheet" href="css/ui-res.css">
+        <script src="js/zy_control.js">
+        </script>
+        <script src="js/zy_click.js">
+        </script>
+        <script>
+        </script>
+    </head>
+    <body class="um-vp c-gra" ontouchstart>
+        <div id="page_0" class="up ub ub-ver" tabindex="0">
+            <!--块容器开始-->
+            <div class="ub ub-ver uba b-gra uc-a1 c-gra uinn">
+                <!--列表开始-->
+                <div class="uba  b-gra c-wh us uc-a1 ">
+                    <div ontouchstart="zy_touch('btn-act')" class="uc-t1 c-m7 ubb ub b-gra t-bla ub-ac lis">
+                        <div class="lis-th ub-img" id="photo">
+                        </div>
+                        <div class="ub-f1 ub ub-ver">
+                            <div class="ulev1" id="name">
+                            </div>
+                            <div class="ulev-1 umh1 t-gra" id="loc_id">
+                            </div>
+                            <div class="ulev-1 umh1 t-gra" id="loc_name">
+                            </div>
+                            <div class="ulev-1 umh1 t-gra" id="created_date">
+                            </div>
+                            <div class="ub ub-ac t-gra ulev-2">
+                                <div class="umh2 umw2 ub-img im1 ">
+                                </div>
+                                <div class="ub-f1">
+                                    豆邮
+                                </div>
+                                <div class="umh2 umw2 ub-img im2">
+                                </div>
+                                <div class="ub-f1">
+                                    关注
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--列表结束-->
+                <!--块容器开始-->
+                <div class="ub ub-ver uba b-gra uc-a1 c-wh  ulev-1 umar-t" id="desc">
+                </div>
+                <!--块容器结束-->
+            </div>
+            <!--块容器结束-->
+        </div>
+    </body>
+    <script>
+        zy_init();
+        window.uexOnload = function(type){
+            uexXmlHttpMgr.onData = httpSuccess;
+            uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+                alert("errorCode:" + errorCode + "\n" + "errorInfo:" + errorInfo);
+            }
+            
+            var info = "https://api.douban.com/v2/user/~me";
+            uexWindow.toast(1, 5, "正在查询用户数据。。。", 0);
+            uexXmlHttpMgr.open(1, "GET", encodeURI(info), 40 * 1000);
+            uexXmlHttpMgr.send(1);
+        }
+        
+        function httpSuccess(opid, status, result){
+            if (status == 1) {
+                if (opid == 1) {
+                    var jsonData = eval("(" + result + ")");
+                    $$("photo").innerHTML = '<img class="ub-img" src="' + jsonData.avatar + '"/>';
+                    $$("name").innerHTML = jsonData.name;
+                    $$("loc_id").innerHTML = jsonData.loc_id;
+                    $$("loc_name").innerHTML = jsonData.loc_name;
+                    $$("created_date").innerHTML = jsonData.created;
+                    $$("desc").innerHTML = jsonData.desc;
+                    uexWindow.closeToast();
+                    uexXmlHttpMgr.close(opid);
+                }
+            }
+        }
+    </script>
+</html>

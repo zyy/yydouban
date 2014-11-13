@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="ui-mobile landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title>广东移动代维管理系统</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-res.css">
+        <link rel="stylesheet" href="../css/ui-fold.css">
+        <link rel="stylesheet" href="../css/ui-media.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-apple.css">
+        <link rel="stylesheet" href="../css/ui-base1.css">
+        <link rel="stylesheet" href="../css/ui-box1.css">
+        <link rel="stylesheet" href="../css/ui-color1.css">
+        <link rel="stylesheet" href="../css/ui-input1.css">
+        <link rel="stylesheet" href="../css/ui-res1.css">
+        <script src="../js/zy_anim.js">
+        </script>
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/ResManager.js">
+        </script>
+        <script type="text/javascript" src="js/jquery-1.8.2.min.js">
+        </script>
+        <script src="../js/zy_tmpl.js">
+        </script>
+        <style type="text/css">
+            #map_canvas {
+                width: 100%;
+                height: 700px;
+                position: absolute;
+            }
+            @media print {#map_canvas {height:
+                    100%;
+            }
+            }
+        </style>
+        <style>
+            .shense {
+                background-color: #F8F8FF;
+            }
+        </style>
+    </head>
+    <body class="ui-mobile-viewport">
+        <!--header开始-->
+        <div data-role="header" class="ui-header ui-bar-b ui-header-fixed ui-bar-glass" onclick="getback_toselect()">
+            <div class="ui-btn ui-btn-limit ui-btn-left ui-btn-iphone " onclick="show_main()">
+                <div class="ui-btn-apple-al">
+                    <div class="ui-btn-apple-ar">
+                        <div class="ui-btn-apple-ac">
+                            <span class="ui-btn-inner "><span class="ui-btn-text">返回</span><span class="ui-icon ui-icon-back ui-icon-shadow"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="ui-title" tabindex="0" role="heading" aria-level="1">资源核查</h1>
+        </div>
+        <!--header结束--><!--content开始-->
+        <div class="ui-content ui-body-d  c-gra ">
+            <br>
+            <br>
+            <div class="ui-collapsible-set ">
+                <div class="ui-collapsible-contain ">
+                    <input type="checkbox" class="custom ui-hide ">
+                    <label onclick="zy_for(event,zy_fold)" class="ui-collapsible-heading ui-btn shense ui-btn-icon-right ui-shadow ui-corner-top [ui-btn-up-c]">
+                        <span class="ui-icon ui-icon-shadow ui-collapsible-icon "></span>
+                        <span class="ui-btn-inner ui-corner-top "><span class="ui-btn-text ">空间资源</span></span>
+                    </label>
+                    <div class="ui-collapsible-content ui-collapsible-content-collapsed" aria-hidden="false">
+                        <ul data-role="listview" class="ui-listview  ui-btn-corner-all  ui-shadow">
+                            <li onclick="select('station')" class=" ui-body-d     ui-btn-corner-top  ui-li-static  ui-li">
+                                <h3 id="newstation" value="zhagnsan" class="ui-li-heading">站点 </h3>
+                            </li>
+                            <li onclick="select('equipmentRoom')" class=" ui-body-d   ui-corner-bottom    ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">机房 </h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ui-collapsible-contain">
+                    <input type="checkbox" class="custom ui-hide">
+                    <label onclick="zy_for(event,zy_fold)" class="ui-collapsible-heading  shense ui-btn ui-btn-icon-right ui-shadow  [ui-btn-up-c]">
+                        <span class="ui-icon ui-icon-shadow ui-collapsible-icon"></span>
+                        <span class="ui-btn-inner "><span class="ui-btn-text">无线网</span></span>
+                    </label>
+                    <div class="ui-collapsible-content ui-collapsible-content-collapsed" aria-hidden="false">
+                        <ul data-role="listview" class="ui-listview  ui-btn-corner-all  ui-shadow">
+                            <li onclick="select('BTSSITE')" class=" ui-body-d     ui-btn-corner-top  ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">BTSSITE(2G) </h3>
+                            </li>
+                            <li onclick="select('Repeater')" class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">直放站</h3>
+                            </li>
+                            <li onclick="select('Tower')" class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">铁塔 </h3>
+                            </li>
+                            <li onclick="select('Antenna')" class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">天线 </h3>
+                            </li>
+                            <li onclick="select('CELL')" class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">CELL(2G) </h3>
+                            </li>
+                            <li onclick="select('NODEB')" class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">NOBEB(3G) </h3>
+                            </li>
+                            <li onclick="select('UTRANCELL')" class=" ui-body-d     ui-btn-corner-bottom  ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">UTRANCELL(3G) </h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ui-collapsible-contain">
+                    <input type="checkbox" class="custom ui-hide">
+                    <label onclick="zy_for(event,zy_fold)" class="ui-collapsible-heading  shense ui-btn ui-btn-icon-right ui-shadow ui-corner-bottom [ui-btn-up-c]">
+                        <span class="ui-icon ui-icon-shadow ui-collapsible-icon"></span>
+                        <span class="ui-btn-inner ui-corner-bottom"><span class="ui-btn-text ">动力系统</span></span>
+                    </label>
+                    <div class="ui-collapsible-content ui-collapsible-content-collapsed" aria-hidden="false">
+                        <ul data-role="listview" class="ui-listview  ui-btn-corner-all  ui-shadow">
+                            <li class=" ui-body-d     ui-btn-corner-top  ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站交流配电屏 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">交流自合闸 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">空调</h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站智能电表 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站电池组 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading"> DCDC转换器 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站直流配电 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">极早期烟感设备 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站智能门禁</h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站防雷设备 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站维护设备 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站移动油机 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站固定油机 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站变压器 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站环控箱 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站太阳能设备 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">稳压器 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站监控设备 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站开关设备 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站UPS信息 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">通风换热 </h3>
+                            </li>
+                            <li class=" ui-body-d       ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">风能设备 </h3>
+                            </li>
+                            <li class=" ui-body-d    ui-corner-bottom   ui-li-static  ui-li">
+                                <h3 class="ui-li-heading">基站基本信息 </h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--可折叠区域结束-->
+            　 
+            <script type="text/javascript">
+                	   zy_init();
+                	//   alert("111");
+                	 　　window.uexOnload = function(){
+                	　　　 zy_init();　　　
+                		 uexControl.cbOpenDatePicker=function(opCode,dataType,data){
+                	　　　　　　　　if(dataType==1){
+                	　　　　　　　　　　var obj = eval('('+data+')');
+                					   document.getElementById('time_data').value="";
+                	                  if(obj.month/10<2&&obj.day/10<2){
+                	                	  document.getElementById('time_data').value =obj.year+"-0"+obj.month+"-0"+obj.day;
+                	                  }
+                	                  else if(obj.month/10<2){
+                	                	  document.getElementById('time_data').value =obj.year+"-0"+obj.month+"-"+obj.day;
+                	   　　　　　　　
+                	                  } else if(obj.day/10<2){
+                	                	  document.getElementById('time_data').value =obj.year+"-"+obj.month+"-0"+obj.day;
+                	                  }else{
+                	                	  document.getElementById('time_data').value =obj.year+"-"+obj.month+"-"+obj.day;
+                	                  }
+                	                                  　} 
+                	　　　　　　}
+                	　　　}
+                 
+                		function show_main(){
+                			   uexWindow.open('myCard213', '0', 'menu.html', '2', '', '', 128);  
+                		       uexWindow.close(-1);
+                		}
+                	 
+                　　
+            </script>
+        </div>
+        <!--文本结束-->
+        <!--网格结束-->
+        </div>
+        <!--content结束-->
+        <!--footer开始-->
+    </body>
+</html>
+<script type="text/javascript">
+</script>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-input.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-img.css">
+        <link rel="stylesheet" href="../css/ui-res.css">
+        <link rel="stylesheet" href="../css/ui-list.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/ui-btn.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-friend.css">
+        <link rel="stylesheet" href="../css/ui-dis.css">
+        <link rel="stylesheet" href="../css/ui-mystyle.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+    </head>
+    <body class="um-vp c-wh c-gra" ontouchstart>
+        <div id="page_0" class="up ub ub-ver" tabindex="0">
+            <!--header开始-->
+            <div id="header" class="uh c-m2 c-blu t-wh">
+                <h1 class="ut ulev0 ut-s tx-c" tabindex="0">
+                    <div class="btn btn-l btn-a ub ub-ac " onclick="uexWindow.close()">
+                        <div class="ulim">
+                            返回
+                        </div>
+                    </div>
+                    YY豆瓣
+                </h1>
+            </div>
+            <!--header结束-->
+            <div class="t-bla ub t-bla uba uc-a1 b-gra c-wh us-i uinput uinn4">
+                <div class="ub-f1 uinn1">
+                    <input type="text" id="diaryname" placeholder="请输入标题" style="background:none">
+                </div>
+            </div>
+            <div class="ui-content dis-body-color" style="padding:0;">
+                <div class="dis-send-content">
+                    <textarea name="message" id="message" style="height: 13em;width:100%">
+                    </textarea>
+                </div>
+                <!--下拉列表开始-->
+                <div class="ub t-bla">
+                    <div class="uinn ulim t-gra">
+                        设置可见:
+                    </div>
+                    <div class="ub-f1 ub  uc-a1 c-wh b-gra us-i sel">
+                        <div id="seleted" class="ub-f1 ut-s uinn ulev-1 tx-l t-gra">
+                            请选择
+                        </div>
+                        <div class="ubl b-gra c-blu c-m2 umw2 ub ub-pc uc-r1 ub-ac">
+                            <div class="ub-img umw1 umh1 res3">
+                            </div>
+                        </div>
+                        <select name="sel0" selectedindex="0" id="sel0" onchange="zy_selectmenu(this.id)">
+                            <option value="public">所有人可见</option>
+                            <option value="friend">仅朋友可见</option>
+                            <option value="private">仅自己可见</option>
+                        </select>
+                    </div>
+                </div>
+                <!--下拉列表结束-->
+                <div class="ub ub-rev" style="margin-top:0.4em">
+                    <input type="checkbox" name="che1" class="uhide" checked="checked" value="">
+                    <div id="permissionSet" onclick="zy_for(event)" ontouchstart="zy_touch('btn-act')" class="ub uc-a1  c-gra t-bla uinn5 uinl">
+                        <div class="t-gra uinl">
+                            不允许回应
+                        </div>
+                        <div class="che-icon ub-img umw1">
+                        </div>
+                    </div>
+                    <div class="uinn ulim t-gra">
+                        权限设置: 
+                    </div>
+                </div>
+                <div class="ub ub-rev ub-pc " style="margin-top:0.4em">
+                    <!--按钮开始-->
+                    <div ontouchstart="zy_touch('btn-act')" class="btn  b-bla uinn5 c-blu c-m2 uc-a1 t-wh uinl">
+                        &nbsp;&nbsp;取消&nbsp;&nbsp;
+                    </div>
+                    <!--按钮结束-->
+                    <!--按钮开始-->
+                    <div ontouchstart="zy_touch('btn-act')" onclick="edit_or_publish()" class="btn  b-bla uinn5 c-blu c-m2 uc-a1 t-wh uinl">
+                        &nbsp;&nbsp;确定&nbsp;&nbsp;
+                    </div>
+                    <!--按钮结束-->
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        zy_init();
+        window.uexOnload = function(type){
+        
+            uexXmlHttpMgr.onData = httpSuccess;
+            
+            uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+                alert("errorCode:" + errorCode + "\n" + "errorInfo:" + errorInfo);
+            }
+            
+            if (localStorage.diary_state == 'add') {
+            }
+            else {
+                fillWindow();
+            }
+        }
+        
+        function fillWindow(){
+            var result = localStorage.diaries_result;
+            var jsonData = eval("(" + result + ")");
+            var id = localStorage.edit_diary_id;
+            var edit_diary = jsonData.notes[id];
+            //后边修改需要id
+            localStorage.edit_diary_doubanId = edit_diary.id;
+            if ($$('message') != null) {
+                insertContent('message', edit_diary.summary);
+            }
+            if ($$('diaryname') != null) {
+                insertContent('diaryname', edit_diary.title);
+            }
+            //设置可见性
+            var index = 0;
+            if (edit_diary.privacy == 'public') {
+                index = 0;
+            }
+            else 
+                if (edit_diary.privacy == 'friend') {
+                    index = 1;
+                }
+                else 
+                    if (edit_diary.privacy == 'private') {
+                        index = 2;
+                    };
+            yy_selectmenu('sel0', index);
+            //设置权限
+            if (edit_diary.can_reply) {
+                permissionSetFun(!edit_diary.can_reply, 'permissionSet');
+            }
+            else {
+                permissionSetFun(edit_diary.can_reply, 'permissionSet');
+            }
+        }
+        
+        function httpSuccess(opid, status, result){
+            if (status == 1) {
+                if (opid == 2) {
+                    alert('修改成功');
+                }
+                uexXmlHttpMgr.close(opid);
+            }
+            else 
+                if (status == -1) {
+                    if (opid == 1) {
+                        alert('發表成功');
+                    }
+                    else {
+                        alert("网络超时");
+                        uexXmlHttpMgr.close(opid);
+                    }
+                }
+        }
+        
+        //修改或者发表日记
+        function edit_or_publish(){
+            var diaryname = $$('diaryname').value;
+            var content = $$('message').value;
+            var privacy = $$('seleted').innerText;
+            var ids = $$('permissionSet');
+            var ch = ids.previousElementSibling;
+            if (localStorage.diary_state == 'add') {
+                var url = "https://api.douban.com/v2/notes";
+                uexXmlHttpMgr.open(1, "POST", encodeURI(url), 40 * 1000);
+                uexXmlHttpMgr.setPostData(1, "0", "title", diaryname);
+                uexXmlHttpMgr.setPostData(1, "0", "privacy", privacy);
+                uexXmlHttpMgr.setPostData(1, "0", "can_reply", ch.checked);
+                uexXmlHttpMgr.setPostData(1, "0", "content", content);
+                uexXmlHttpMgr.setPostData(1, "0", "pids", '');
+                uexXmlHttpMgr.setPostData(1, "0", "layout_pid", 'C');
+                uexXmlHttpMgr.setPostData(1, "0", "desc_pid", '');
+                uexXmlHttpMgr.setPostData(1, "0", "image_pid", '');
+                uexXmlHttpMgr.send(1);
+            }
+            else {
+                var url = "http://api.douban.com/note/" + localStorage.edit_diary_doubanId;// +"?title="+diaryname+"&privacy="+privacy+"&can_reply="+ch.checked+"&content="+content+"&pids=''&layout_pid=C&desc_pid=''&image_pid=''";
+                var xmlHttpRequest = getXMLHTTPRequest();
+                if (xmlHttpRequest != null) {
+                    xmlHttpRequest.onreadystatechange = function(){
+                        alert(xmlHttpRequest.readyState);
+                        if (xmlHttpRequest.readyState == 4) {
+                            alert('成功');
+                            if ((xmlHttpRequest.status >= 200 && xmlHttpRequest.status < 300) || xmlHttpRequest.status == 304) {
+                                //// Do something.
+                            }
+                            else {
+                                alert("Request was unsuccessful: " + xmlHttpRequest.status);
+                            }
+                        }
+                    }
+                }
+                xmlHttpRequest.open("PUT", url, true);
+                var string = '<?xml version="1.0" encoding="UTF-8"?>'+
+                '<entry xmlns="http://www.w3.org/2005/Atom"'+
+                'xmlns:db="http://www.douban.com/xmlns/">'+
+                '<title>ABOUT ME</title>'+
+                '<content>'+
+                '在失去勇气的日子里，要提醒自己的好！'+
+                '</content>'+
+                '<db:attribute name="privacy">private</db:attribute>'+
+                '<db:attribute name="can_reply">yes</db:attribute>'+
+                '</entry>';
+                xmlHttpRequest.send(string);
+                alert('已发送');
+            }
+        }
+        
+        function getXMLHTTPRequest(){
+            if (XMLHttpRequest) {
+                return new XMLHttpRequest();
+            }
+            else {
+                try {
+                    return new ActiveXObject('Msxml2.XMLHTTP');
+                } 
+                catch (e) {
+                    return new ActiveXObject('Microsoft.XMLHTTP');
+                }
+            }
+        }
+        
+        //权限checkbox操作
+        function permissionSetFun(state, id){
+            var ids = $$(id);
+            var ch = ids.previousElementSibling;
+            if (ch.nodeName == "INPUT") {
+                if (ch.type == "checkbox") 
+                    ch.checked = state;
+            }
+        }
+        
+        //设置下拉框选择
+        function yy_selectmenu(id, index){
+            var sl = $$(id);
+            if (sl) {
+                var sp = sl.parentElement; //<span>
+                if (sp) {
+                    var ch = sp.getElementsByTagName("div")[0];
+                    var t = sl.options[index].text;
+                    if (ch) {
+                        ch.innerHTML = t;
+                    }
+                }
+            }
+        }
+        
+        //追加文本
+        function insertContent(target, text){
+            var obj = $$(target);
+            if (obj) {
+                obj.value += text;
+            }
+        }
+    </script>
+</html>

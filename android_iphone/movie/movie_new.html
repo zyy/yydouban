@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="imagetoolbar" content="no">
+        <script src="../js/yy_3d.js">
+        </script>
+        <script src="../js/zy_slide.js">
+        </script>
+        <!--<link type="text/css" rel="stylesheet" href="chrome-extension://cpngackimfmofbokmjmljamhdncknpmg/style.css">
+        <script type="text/javascript" charset="utf-8" src="chrome-extension://cpngackimfmofbokmjmljamhdncknpmg/page_context.js">
+        </script>-->
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-3d.css">
+        <link rel="stylesheet" href="../css/ui-input.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-img.css">
+        <link rel="stylesheet" href="../css/ui-res.css">
+        <link rel="stylesheet" href="../css/ui-list.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/ui-btn.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+        <script src="../js/zy_slide.js">
+        </script>
+        <script src="../js/iscroll.js">
+        </script>
+        <style>
+            #wrapper {
+                position: relative;
+                z-index: 1;
+                width: 100% /* your desired width, auto and 100% are fine */;
+                height: 500px /* element height */;
+                overflow: scroll /* hidden|auto|scroll */;
+            }
+        </style>
+    </head>
+    <body screen_capture_injected="true" class="um-vp c-wh c-gra">
+        <div id="page_2" class="up ub ub-ver" tabindex="0">
+            <div id="header" class="uh c-m2 c-blu t-wh">
+                <h1 class="ut ulev0 ut-s tx-c" tabindex="0">
+                    <div class="btn btn-l btn-a ub ub-ac " onclick="uexWindow.close()">
+                        <div class="ulim">
+                            返回
+                        </div>
+                    </div>
+                    YY豆瓣
+                </h1>
+            </div>
+            <div id="content" class="ub-f1 tx-l t-bla ub-img6 res11 c-bla">
+                <div id="imageFlow">
+                    <div class="bank" id="slider">
+                        <!--这点代码想得头疼啊 汗-->
+                        <!--加载图片-->
+                        <script language="javascript">
+                            var result = localStorage.newMovies;
+                            var jsonData = eval("(" + result + ")");
+                            var length = jsonData.movies.length;
+                            for (var i = 0; i < length; i++) {
+                                var movie = jsonData.movies[i];
+                                document.write('<a rel="' + movie.image + '" title="' + movie.attrs.title + '">' + movie.attrs.country + '/' + movie.attrs.movie_type + '/' + movie.attrs.year + '</a>');
+                            }
+                        </script>
+                    </div>
+                    <div class="text">
+                        <div class="title">
+                            The End
+                        </div>
+                        <div class="legend">
+                            ...has not been written yet
+                        </div>
+                    </div>
+                    <!--<div class="scrollbar">
+                    <img class="track" src="../css/images/sb.gif" alt=""><img class="arrow-left" src="../css/images/sl.gif" alt=""><img class="arrow-right" src="../css/images/sr.gif" alt=""><img class="bar" src="../css/images/sc.gif" alt="" style="left: 1055px; ">
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        zy_init();
+        window.uexOnload = function(type){
+//            if (!type) {
+//                $$("imageFlow").slide = new zySlide("imageFlow", "H", function(){
+//                
+//                }, false, function(e){
+//                
+//                });
+//            }
+        }
+    </script>
+</html>

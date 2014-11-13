@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-btn.css">
+        <link rel="stylesheet" href="../css/ui-input.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/ui-res.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+        <script>
+        </script>
+    </head>
+    <body class="um-vp c-wh" style="margin:0.4em;" ontouchstart>
+        <div class="tx-l ulev1 " style="background-color:#E6E6E6;">
+            添加收藏：我读过这本书
+        </div>
+        <div style="margin-top:0.4em;">
+            给个评价吧?<img src="../css/images/nst.gif"/><img src="../css/images/nst.gif"/><img src="../css/images/nst.gif"/><img src="../css/images/nst.gif"/><img src="../css/images/nst.gif"/>(可选): 
+        </div>
+        <div style="margin-top:0.4em;">
+            标签(多个标签用空格分隔): 
+        </div>
+        <div class="c-wh uba uc-a1 b-gra us-i uinput uinn4">
+            <input type="text" class="uc-a1">
+        </div>
+        <div style="margin-top:0.4em;" id="myTags">
+        </div>
+        <div style="margin-top:0.4em;" id="normalTags">
+            
+        </div>
+        <div style="margin-top:0.4em;">
+            简短附注:
+        </div>
+        <!--文本开始-->
+        <div class="uba c-wh uc-a1 b-gra us-i uinput uinn4">
+            <textarea name="textarea-0" class="uc-a1" id="comment">
+            </textarea>
+        </div>
+        <div class="btn  b-bla uinn5 c-blu c-m2 uc-a1 t-wh uinl" onclick="add()" style="margin:0.4em 0.4em 0.4em 80%">
+            &nbsp;保存&nbsp;
+        </div>
+        <!--按钮结束-->
+    </body>
+    <script>
+        zy_init();
+        window.uexOnload = function(type){
+            uexXmlHttpMgr.onData = httpSuccess;
+            uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+                alert("errorCode:" + errorCode + "\n" + "errorInfo:" + errorInfo);
+            }
+            var server = "https://api.douban.com/v2/book/user/" + localStorage.user_uid + "/tags";
+            uexXmlHttpMgr.open(2, "GET", encodeURI(server), 40 * 1000);
+            uexXmlHttpMgr.setPostData(2, "0", "status", 'wish');
+            uexXmlHttpMgr.send(2);
+            
+			var jsonData = eval("(" + localStorage.book_normalTags + ")");
+            var tags = jsonData.tags;
+			var html = '常用标签:';
+            for (var i = 0; i < tags.length; i++) {
+                html += '<div style="margin-left:0.2em;" ontouchstart="zy_touch(\'btn-act\')" class="btn uba b-bla c-org1 c-m2 uc-a1 t-bla uinl">' + tags[i].name + '</div>';
+            }
+            $$("normalTags").innerHTML = html;
+        }
+        
+        function httpSuccess(opid, status, result){
+            if (status == 1) {
+                if (opid == 2) {
+                    var jsonData = eval("(" + result + ")");
+                    var html = '我的标签:';
+                    var length = jsonData.tags.length;
+                    for (var i = 0; i < length; i++) {
+                        html += '<div style="margin-left:0.2em;" ontouchstart="zy_touch(\'btn-act\')" class="btn uba b-bla c-org1 c-m2 uc-a1 t-bla uinl">' + jsonData.tags[i].title + '</div>';
+                    }
+                    $$("myTags").innerHTML = html;
+                    uexXmlHttpMgr.close(opid);
+                }
+            }
+            else 
+                if (status == -1) {
+                    if (opid == 1) {
+                        alert('保存成功');
+                    }
+                    else {
+                        alert("网络超时");
+                    }
+                }
+        }
+        
+        function add(){
+            var server = "https://api.douban.com/v2/book/" + localStorage.bookid + "/collection";
+            uexWindow.toast(1, 5, "正在收藏书籍。。。", 0);
+            uexXmlHttpMgr.open(1, "POST", encodeURI(server), 40 * 1000);
+            uexXmlHttpMgr.setPostData(1, "0", "status", 'wish');
+            uexXmlHttpMgr.setPostData(1, "0", "tags", $$('myTags').value);
+            uexXmlHttpMgr.setPostData(1, "0", "comment", $$('comment').value);
+            uexXmlHttpMgr.setPostData(1, "0", "privacy", '');
+            uexXmlHttpMgr.setPostData(1, "0", "rating", '');
+            uexXmlHttpMgr.send(1);
+        }
+    </script>
+</html>

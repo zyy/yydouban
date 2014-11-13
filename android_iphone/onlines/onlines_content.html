@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-input.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-img.css">
+        <link rel="stylesheet" href="../css/ui-res.css">
+        <link rel="stylesheet" href="../css/ui-list.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/ui-btn.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-friend.css">
+        <link rel="stylesheet" href="../css/ui-dis.css">
+        <link rel="stylesheet" href="../css/ui-mystyle.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+        <script src="../js/yy_pagenav.js">
+        </script>
+    </head>
+    <body class="um-vp" ontouchstart>
+        <!--列表开始-->
+        <div class="uba  b-gra c-wh us uc-n" id="bookList">
+        </div>
+        <!--列表结束-->
+        <div id="thume_cont" style="margin:0 15px;">
+            <div id="pagenav" style="margin:0 -15px;">
+            </div>
+        </div>
+    </body>
+    <script>
+        var pageCount = 10;
+        var gtotpage = 0;
+        var gcurpage = 0;
+        var threadpage = 1;
+        var obj = {
+            pagenav: 'pagenav'
+        };
+        zy_init();
+        window.uexOnload = function(type){
+            if (!type) {
+                uexWindow.setBounce("1");
+                uexWindow.showBounceView("0", "#FFF", "0");
+                uexWindow.showBounceView("1", "#FFF", "0");
+            }
+            uexXmlHttpMgr.onData = httpSuccess;
+            uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+                alert("errorCode:" + errorCode + "\n" + "errorInfo:" + errorInfo);
+            }
+            search();
+        }
+        
+        function httpSuccess(opid, status, result){
+            if (status == 1) {
+                if (opid == 1) {
+                    var jsonData = eval("(" + result + ")");
+                    var html = '';
+                    var length = jsonData.onlines.length;
+                    for (var i = 0; i < length; i++) {
+                        html += '<div ontouchstart="zy_touch(\'btn-act\')" onclick = "detail(' + jsonData.onlines[i].id + ')" class="uc-t c-m2 ubb ub b-gra t-bla ub-ac lis">' +
+                        '<div class="lis-th ub-img "><img class="reflect" src=\"' +
+                        jsonData.onlines[i].icon +
+                        '\"/></div>' +
+                        '<div class="ub-f1 ub ub-ver uinn"><div class="ulev1">' +
+                        jsonData.onlines[i].title +
+                        '</div>' +
+                        '<div class="ulev-1 umh4 t-gra">' +
+                        jsonData.onlines[i].begin_time +
+                        '-' +
+                        jsonData.onlines[i].end_time +
+                        '/发起人：' +
+                        jsonData.onlines[i].owner.name +
+                        '</div><div class="ulev-1 umh4 t-gra ut-s">' +
+                        jsonData.onlines[i].desc +
+                        '</div></div></div>';
+                    }
+                    $$("bookList").innerHTML = html;
+                    var totalLength = jsonData.total;
+                    if (totalLength % pageCount == 0) {
+                        gtotpage = totalLength / pageCount
+                    }
+                    else 
+                        if (gtotpage = totalLength / pageCount < 1) {
+                            gtotpage = 1;
+                        }
+                        else {
+                            gtotpage = parseInt(totalLength / pageCount) + 1;
+                        }
+                    gcurpage = threadpage;
+                    setpagenum(obj, threadpage, gtotpage, 1);
+                }
+                uexXmlHttpMgr.close(opid);
+                uexWindow.closeToast();
+            }
+            else 
+                if (status == 0) {
+                
+                }
+                else 
+                    if (status == -1) {
+                        alert("网络超时");
+                    }
+        }
+        
+        function turnpage(cmd){
+            if (cmd == 0) 
+                threadpage = 1;
+            else 
+                if (cmd == -1) {
+                    if (gcurpage == 1) 
+                        return;
+                    threadpage = gcurpage - 1;
+                }
+                else 
+                    if (cmd == 1) {
+                        if (gtotpage > 0 && gcurpage == gtotpage) 
+                            return;
+                        threadpage = gcurpage + 1;
+                    }
+                    else 
+                        if (cmd == 2) 
+                            threadpage = gtotpage;
+                        else 
+                            if (cmd == 3) 
+                                threadpage = gcurpage;
+                            else 
+                                threadpage = 1;
+            search();
+        }
+        
+        function jumppage(){
+            var keycap = '确定,取消'.split(",");
+            uexWindow.cbPrompt = function(opId, dataType, data){
+                var objdata = eval('(' + data + ')');
+                if (objdata.num == 0) {
+                    var num = parseInt(objdata.value);
+                    if (0 < num && num <= gtotpage) {
+                        gcurpage = num;
+                        turnpage(3);
+                    }
+                    else {
+                        uexWindow.alert('提示', '超出最大访问页数！', '确定');
+                    }
+                }
+            }
+            uexWindow.prompt('请输入页码：', '请输入页码：', '', keycap);
+        }
+        
+        function detail(onlinesId){
+			localStorage.onlines_detailId = onlinesId;
+			var name = "onlines_detail";
+            uexWindow.open(name, "0", name + ".html", "", "", "", 0);
+        }
+        
+        function search(){
+            var server = "https://api.douban.com/v2/onlines?start=" + (threadpage - 1) * pageCount + "&count=" + pageCount;
+            uexWindow.toast(1, 5, "正在查询数据。。。", 0);
+            uexXmlHttpMgr.open(1, "GET", encodeURI(server), 40 * 1000);
+            uexXmlHttpMgr.send(1);
+        }
+    </script>
+</html>

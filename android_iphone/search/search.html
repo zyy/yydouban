@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-input.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-img.css">
+        <link rel="stylesheet" href="../css/ui-res.css">
+        <link rel="stylesheet" href="../css/ui-list.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/ui-btn.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-friend.css">
+        <link rel="stylesheet" href="../css/ui-dis.css">
+        <link rel="stylesheet" href="../css/ui-mystyle.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+        <script src="../js/yy_pagenav.js">
+        </script>
+        <script src="../js/yy_dis.js">
+        </script>
+        <script>
+            function exeJS(){
+				if($$("searchName").value == ''){
+					alert('搜索内容不能为空');
+					return;
+				}
+                localStorage.searchName = $$("searchName").value;
+                var title = $$("mytitle").innerHTML;
+                //用于判断是搜索书籍、电影还是音乐
+                if (title == '书籍') {
+                    localStorage.search_type = 'book';
+                    localStorage.book_state = 'search'
+                }
+                else 
+                    if (title == '电影') {
+                        localStorage.search_type = 'movie';
+                        localStorage.movie_state = 'search'
+                    }
+                    else 
+                        if (title == '音乐') {
+                            localStorage.search_type = 'music';
+                            localStorage.music_state = 'search'
+                        }
+                uexWindow.evaluatePopoverScript("search", "content", "search()");
+            }
+        </script>
+    </head>
+    <body class="um-vp c-wh c-gra" ontouchstart>
+        <div id="page_0" class="up ub ub-ver" tabindex="0">
+            <!--header开始-->
+            <div id="header" class="uh c-m2 c-blu t-wh" onclick="login()">
+                <h1 class="ut ulev0 ut-s tx-c" tabindex="0">
+                    <div class="btn btn-l btn-a ub ub-ac " onclick="uexWindow.close()">
+                        <div class="ulim">
+                            返回
+                        </div>
+                    </div>
+                    豆瓣读书<!--按钮开始-->
+                    <div class="btn btn-r btn-n ub ub-ac" onclick="openMorefloat()">
+                        <div class="ulim">
+                            更多
+                        </div>
+                    </div>
+                    <!--按钮结束-->
+                </h1>
+                <div class="c-gra" id="page_search">
+                    <!--文本开始-->
+                    <div class="ub t-bla">
+                        <div class="uinn ulim" onclick="openfloat()">
+                            <span id="mytitle" class="umw1" style="color:#859BBB">书籍</span>
+                            <img id="trans-pic" calss="umw1 ub-img c-wh" src="../css/images/icons-18-white_down.png" style="width:.85em;">
+                        </div>
+                        <div class="t-bla ub ub-f1 t-bla uba uc-a1 b-gra c-wh us-i uinput uinn4">
+                            <div class="ub-f1 uinn1">
+                                <input type="text" id="searchName" placeholder="标签、关键字" style="background:none">
+                            </div>
+                            <div class="res6 umw1 ub-img" onclick="exeJS()">
+                            </div>
+                        </div>
+                        <div class="ub t-bla">
+                            &nbsp;
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--content开始-->
+            <div id="content" class="ub-f1 tx-l t-bla ub-img6 c-gra">
+            </div>
+            <!--content结束-->
+            <!--footer开始-->
+            <div id="footer" class="uf c-m2 c-blu t-wh">
+                <!--iPhone导航条开始-->
+                <div class="ub c-blu c-m3 tab t-wh">
+                    <input class="uhide" type="radio" name="tabSwitch" checked="true">
+                    <div ontouchstart="zy_touch('',zy_for)" onclick="myBook(0)" class="ub-f1 ub ub-ver tab-act">
+                        <div class="ub-f1 ub-img5 tp-talk">
+                        </div>
+                        <div class="uinn ulev-2 tx-c">
+                            我读
+                        </div>
+                    </div>
+                    <input class="uhide" type="radio" name="tabSwitch">
+                    <div ontouchstart="zy_touch('',zy_for)" onclick="myMusic(1)" class="ub-f1 ub ub-ver tab-act">
+                        <div class="ub-f1 ub-img5 tp-home">
+                        </div>
+                        <div class="uinn ulev-2 tx-c">
+                            我听
+                        </div>
+                    </div>
+                    <input class="uhide" type="radio" name="tabSwitch">
+                    <div ontouchstart="zy_touch('',zy_for)" onclick="myMovies(2)" class="ub-f1 ub ub-ver tab-act">
+                        <div class="ub-f1 ub-img5 tp-set">
+                        </div>
+                        <div class="uinn ulev-2 tx-c">
+                            我看
+                        </div>
+                    </div>
+                    <input class="uhide" type="radio" name="tabSwitch">
+                    <div ontouchstart="zy_touch('',zy_for)" onclick="myDiary(3)" class="ub-f1 ub ub-ver tab-act">
+                        <div class="ub-f1 ub-img5 tp-shop">
+                        </div>
+                        <div class="uinn ulev-2 tx-c">
+                            我的日记
+                        </div>
+                    </div>
+                    <input class="uhide" type="radio" name="tabSwitch">
+                    <div ontouchstart="zy_touch('',zy_for)" onclick="myinfo(4)" class="ub-f1 ub ub-ver tab-act">
+                        <div class="ub-f1 ub-img5 tp-info">
+                        </div>
+                        <div class="uinn ulev-2 tx-c">
+                            我的资料
+                        </div>
+                    </div>
+                </div>
+                <!--iPhone导航条结束-->
+            </div>
+            <!--footer结束-->
+        </div>
+    </body>
+    <script>
+        zy_init();
+        window.uexOnload = function(type){
+            if (!type) {
+                zy_con("content", "search_content.html", 0, $$("header").offsetHeight);
+            }
+            window.onorientationchange = window.onresize = function(){
+                zy_resize("content", 0, $$("header").offsetHeight);
+            }
+        }
+        
+        //我读
+        function myBook(index){
+            $$('page_search').style.display = 'none';
+            zy_con("content", "search_content.html", 0, $$("header").offsetHeight);
+            localStorage.book_state = 'myBook';
+            localStorage.search_type = 'book'
+            uexWindow.evaluatePopoverScript("search", "content", "search()");
+            var switchs = $$("tabSwitch");
+            for (var i = 0; i < switchs.length; i++) {
+                if (i == index) {
+                    switchs[i].checked = true;
+                }
+                else {
+                    switchs[i].checked = false;
+                }
+            }
+            window.onorientationchange = window.onresize = function(){
+                zy_resize("content", 0, $$("header").offsetHeight);
+            }
+        }
+        
+        //我看
+        function myMovies(index){
+            $$('page_search').style.display = 'none';
+            zy_con("content", "search_content.html", 0, $$("header").offsetHeight);
+            localStorage.movie_state = 'myMovie';
+            localStorage.search_type = 'movie'
+            uexWindow.evaluatePopoverScript("search", "content", "search()");
+            var switchs = $$("tabSwitch");
+            for (var i = 0; i < switchs.length; i++) {
+                if (i == index) {
+                    switchs[i].checked = true;
+                }
+                else {
+                    switchs[i].checked = false;
+                }
+            }
+            window.onorientationchange = window.onresize = function(){
+                zy_resize("content", 0, $$("header").offsetHeight);
+            }
+        }
+        
+        //我听
+        function myMusic(index){
+            $$('page_search').style.display = 'none';
+            zy_con("content", "search_content.html", 0, $$("header").offsetHeight);
+            localStorage.music_state = 'myMusic';
+            localStorage.search_type = 'music'
+            uexWindow.evaluatePopoverScript("search", "content", "search()");
+            var switchs = $$("tabSwitch");
+            for (var i = 0; i < switchs.length; i++) {
+                if (i == index) {
+                    switchs[i].checked = true;
+                }
+                else {
+                    switchs[i].checked = false;
+                }
+            }
+            window.onorientationchange = window.onresize = function(){
+                zy_resize("content", 0, $$("header").offsetHeight);
+            }
+        }
+        
+        //我的日记
+        function myDiary(index){
+            $$('page_search').style.display = 'none';
+            zy_con("content", "../diary/diary_me_content.html", 0, $$("header").offsetHeight);
+            var switchs = $$("tabSwitch");
+            for (var i = 0; i < switchs.length; i++) {
+                if (i == index) {
+                    switchs[i].checked = true;
+                }
+                else {
+                    switchs[i].checked = false;
+                }
+            }
+            window.onorientationchange = window.onresize = function(){
+                zy_resize("content", 0, $$("header").offsetHeight);
+            }
+        }
+        
+        //我的信息
+        function myinfo(index){
+            $$('page_search').style.display = 'none';
+            zy_con("content", "../info_content.html", 0, $$("header").offsetHeight);
+            var switchs = $$("tabSwitch");
+            for (var i = 0; i < switchs.length; i++) {
+                if (i == index) {
+                    switchs[i].checked = true;
+                }
+                else {
+                    switchs[i].checked = false;
+                }
+            }
+            window.onorientationchange = window.onresize = function(){
+                zy_resize("content", 0, $$("header").offsetHeight);
+            }
+        }
+        
+        function openfloat(){
+            var ho = $$("page_search");
+            var cs = window.getComputedStyle(ho, null);
+            var size = cs.fontSize;
+            var size = parseInt(cs.fontSize);
+            var h = window.innerHeight;
+            var w = window.innerWidth;
+            if (ho) {
+                uexWindow.openPopover("floatdiv", "0", "pop_search.html?p=011", '', '', '', w, h, size, "");
+            }
+        }
+        
+        //更多
+        function openMorefloat(){
+            var ho = $$("page_search");
+            var cs = window.getComputedStyle(ho, null);
+            var size = cs.fontSize;
+            var size = parseInt(cs.fontSize);
+            var h = window.innerHeight;
+            var w = window.innerWidth;
+            if (ho) {
+                uexWindow.openPopover("floatmorediv", "0", "pop_more.html?p=011", '', '', '', w, h, size, "");
+            }
+        }
+        
+        function dis_s_slectmenu(id){
+            var str = '';
+            if (id == 0) {
+                str = '书籍';
+            }
+            else 
+                if (id == 1) {
+                    str = '电影';
+                }
+                else 
+                    if (id == 2) {
+                        str = '音乐';
+                    }
+            var ele = $$("mytitle");
+            if (ele != null) {
+                ele.innerHTML = str;
+            }
+            closepop();
+        }
+        
+        //更多回调函数
+        function dis_more_slectmenu(id){
+            if (id == 0) {
+                $$('page_search').style.display = 'block';
+            }
+            else 
+                if (id == 1) {
+                    var name = "diary_publish";
+                    uexWindow.open(name, "0", "../diary/"+ name + ".html", "", "", "", 0);
+                }
+                else 
+                    if (id == 2) {
+                        alert('作者：yycoder<br>博客：http://blog.csdn.net/yycoder<br>邮箱：692895299@qq.com');
+                    }
+            closeMorePop();
+        }
+        
+        function closeMorePop(){
+            uexWindow.closePopover('floatmorediv');
+            zy_con("content", "search_content.html", 0, $$("header").offsetHeight);
+            window.onorientationchange = window.onresize = function(){
+                zy_resize("content", 0, $$("header").offsetHeight);
+            }
+        }
+        
+        function closepop(){
+            uexWindow.closePopover('floatdiv');
+        }
+    </script>
+</html>

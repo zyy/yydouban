@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html class="ui-mobile landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="../css/ui-mystyle.css">
+	<script src="../js/zy_click.js"></script>
+</head>
+<body class="ui-mobile-viewport" ontouchstart>
+<div class="dis-pop-window" >
+	<div style="display:block; overflow:hidden;" id="ofloat">
+		<div class="dis-more-t"> 
+			<div class="tipMoreArrow"></div>
+			<ul class="dis-search-bg">
+				<li onclick="menus(0)"><span style="color:#fff">我搜</span><img src="../css/images/h-line.png" style="width:100%;display:block;"></li>
+				<li onclick="menus(1)"><span style="color:#fff">写日记</span><img src="../css/images/h-line.png" style="width:100%;display:block;"></li>
+				<li onclick="menus(2)"><span style="color:#fff">关于</span></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<script>
+function menus(id){
+		uexWindow.evaluateScript('search','0','dis_more_slectmenu('+id+')');
+}
+function closepop(){
+	uexWindow.closePopover('floatmorediv');
+}
+window.uexOnload = function(){
+	
+	var a =  document.getElementById("ofloat");
+	a.style.width = window.innerWidth;
+	a.style.height = window.innerHeight;
+}
+</script>
+</body>
+</html>

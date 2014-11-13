@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+		<script src="../js/zy_anim.js">
+        </script>
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_tmpl.js">
+        </script>
+        <style>
+            #imageView {
+                background-repeat: no-repeat;
+                background-position: center;
+                background-attachment: fixed;
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body class="um-vp" ontouchstart>
+        <div class="ub ub-rev ub-pj" id="imageView">
+            <div class="ub-f1" onclick="preImage()">
+            </div>
+            <div class="ub-f1" onclick="nextImage()">
+            </div>
+        </div>
+    </body>
+    <script>
+        var images = new Array();
+        var cur = 0;
+        zy_init();
+        window.uexOnload = function(type){
+            if (!type) {
+                uexWindow.setBounce("1");
+                uexWindow.showBounceView("0", "#FFF", "0");
+                uexWindow.showBounceView("1", "#FFF", "0");
+            }
+            init();
+        }
+        
+        function init(){
+            images = localStorage.images.split(',');
+			alert(images);
+			uexImageBrowser.open(images,'0','0');
+//            cur = localStorage.curImage;
+//            $$("imageView").style.background = 'transparent url(' + images[cur] + ') no-repeat center fixed';
+        }
+        
+        function preImage(){
+            cur += 1;
+            if (cur > images.length - 1) {
+                cur = images.length - 1;
+            }
+            $$("imageView").style.background = 'transparent url(' + images[cur] + ') no-repeat center fixed';
+        }
+        
+        function nextImage(){
+            cur -= 1;
+            if (cur < 0) {
+                cur = 0;
+            }
+            $$("imageView").style.background = 'transparent url(' + images[cur] + ') no-repeat center fixed';
+        }
+    </script>
+</html>

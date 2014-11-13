@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-input.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-img.css">
+        <link rel="stylesheet" href="../css/ui-res.css">
+        <link rel="stylesheet" href="../css/ui-list.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/ui-btn.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-mystyle.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+    </head>
+    <body>
+        <div id="bookDetail" style="margin:0.4em">
+        </div>
+    </body>
+    <script>
+        window.uexOnload = function(type){
+            if (!type) {
+                uexWindow.setBounce("1");
+                uexWindow.showBounceView("0", "#FFF", "0");
+                uexWindow.showBounceView("1", "#FFF", "0");
+            }
+            uexXmlHttpMgr.onData = httpSuccess;
+            uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+                alert("errorCode:" + errorCode + "\n" + "errorInfo:" + errorInfo);
+            }
+            
+            var server = "https://api.douban.com/v2/book/" + localStorage.bookid;
+            uexWindow.toast(1, 5, "正在查询数据。。。", 0);
+            uexXmlHttpMgr.open(1, "GET", encodeURI(server), 40 * 1000);
+            uexXmlHttpMgr.send(1);
+        }
+        
+        function httpSuccess(opid, status, result){
+            uexXmlHttpMgr.close(opid);
+            uexWindow.closeToast();
+            if (status == 1) {
+                if (opid == 1) {
+                    var jsonData = eval("(" + result + ")");
+                    var html = '';
+                    var tags = '';
+                    localStorage.book_normalTags = result;
+                    for (var i = 0; i < jsonData.tags.length; i++) {
+                        tags += jsonData.tags[i].name + '(' + jsonData.tags[i].count + ')';
+                    }
+                    html += '<div class="tx-c ulev1 " style="margin-top:0.2em;background-color:#E6E6E6;">' + jsonData.title +
+                    '</div><div class="ub ub-rev umh5" style="margin-top:0.4em"><div class="ub-f2 ulev-1" style="word-wraps">作者:' +
+                    jsonData.author[0] +
+                    '<br>标题:' +
+                    jsonData.title +
+                    '<br>价格:' +
+                    jsonData.price +
+                    '<br>ISBN10:' +
+                    jsonData.isbn10 +
+                    '<br>上市日期:' +
+                    jsonData.pubdate +
+                    '<br>页数:' +
+                    jsonData.pages +
+                    '页<br>装订:' +
+                    jsonData.binding +
+                    '<br>ISBN13:' +
+                    jsonData.isbn13 +
+                    '<br>出版社:' +
+                    jsonData.publisher +
+                    '</div><div class="ub-f2" style="min-width:5em"><img style="margin-left:0.3em;" class="us" src=\"' +
+                    jsonData.images.small +
+                    '\"/></div></div>' +
+                    '<div class="tx-l ulev1 " style="margin:0.4em"><div ontouchstart="zy_touch(\'btn-act\')" class="btn uba b-bla c-org1 c-m2 uc-a1 t-bla uinl" onclick="review()" style="margin:0.2em">想读</div>' +
+                    '<div onclick="review()" ontouchstart="zy_touch(\'btn-act\')" class="btn uba b-bla c-org1 c-m2 uc-a1 t-bla uinl " style="margin:0.2em">在读</div>' +
+                    '<div onclick="review()" ontouchstart="zy_touch(\'btn-act\')" class="btn uba b-bla c-org1 c-m2 uc-a1 t-bla uinl " style="margin:0.2em">读过</div>' +
+                    '<a class="ulev-0 ">评价:</a>' +
+                    '<img src="../css/images/nst.gif"/>' +
+                    '<img src="../css/images/nst.gif"/>' +
+                    '<img src="../css/images/nst.gif"/>' +
+                    '<img src="../css/images/nst.gif"/>' +
+                    '<img src="../css/images/nst.gif"/></div>' +
+                    '<div class="tx-l ulev-0 " style="margin:0.4em"><img src="../css/images/add-review.gif"/>' +
+                    '<div ontouchstart="zy_touch(\'btn-act\')" class="btn  b-bla uinl c-wh c-m2 uc-a1 t-blu"style="margin:0.2em">写书评</div></div>' +
+                    '<div class="tx-l ulev1 " style="margin-top:0.4em;background-color:#E6E6E6;">作者简介</div >' +
+                    '<div class="ulev-1" style="margin-top:0.4em">' +
+                    jsonData.author_intro +
+                    '</div><div class="tx-l ulev1 " style="margin-top:0.4em;background-color:#E6E6E6;">內容简介</div >' +
+                    '<div class="ulev-1" style="margin-top:0.4em">' +
+                    jsonData.summary +
+                    '</div><div class="tx-l ulev1 " style="margin-top:0.4em;background-color:#E6E6E6;">常用标签</div >' +
+                    '<div class="ulev-1" style="margin-top:0.4em">' +
+                    tags +
+                    '</div><div class="tx-l ulev1 " style="margin-top:0.4em;background-color:#E6E6E6;">书评</div >' +
+                    '<div class="uba  b-wh c-wh us uc-a1 " id="reviews"></div>';
+                    $$("bookDetail").innerHTML = html;
+                    
+                    var server = "http://api.douban.com/book/subject/" + localStorage.bookid + "/reviews?alt=json";
+                    uexWindow.toast(2, 5, "正在查询数据。。。", 0);
+                    uexXmlHttpMgr.open(2, "GET", encodeURI(server), 40 * 1000);
+                    uexXmlHttpMgr.send(2);
+                }
+                else 
+                    if (opid == 2) {
+                        var jsonData = eval("(" + result + ")");
+                        var html = '';
+                        var length = 0;
+                        if (jsonData.entry.length > 8) {
+                            length = 8;
+                        }
+                        else {
+                            length = jsonData.entry.length;
+                        }
+                        for (var i = 0; i < length; i++) {
+                            var arr = jsonData.entry[i].id.$t.split('/');
+                            html += '<div ontouchstart="zy_touch(\'btn-act\')" class="uc-t c-m2 ubb ub b-gra t-bla ub-ac lis" ><div class="ulev-1 b-gra">' +
+                            jsonData.entry[i].title.$t +
+                            '<br>来自' +
+                            jsonData.entry[i].author.name.$t +
+                            '</div></div>';
+                        }
+                        html += '<div class="ulev-1 tx-r" style="margin-top:0.4em;margin-bottom:0.6em"><a href="">浏览更多书评</a></div>'
+                        $$("reviews").innerHTML = html;
+                        uexXmlHttpMgr.close(opid);
+                        uexWindow.closeToast();
+                    }
+            }
+            else 
+                if (status == -1) {
+                    alert("网络超时");
+                }
+        }
+        
+        function discussion(discussion_id){
+            localStorage.discussion_id = discussion_id;
+            uexWindow.open('discussion', '0', '../discussion/discussion.html', '1', '', '', '0');
+        }
+        
+        function review(){
+            uexWindow.open('book_review', '0', 'book_review.html', '1', '', '', '0');
+        }
+    </script>
+</html>

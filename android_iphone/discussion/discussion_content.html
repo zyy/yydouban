@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-input.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-img.css">
+        <link rel="stylesheet" href="../css/ui-res.css">
+        <link rel="stylesheet" href="../css/ui-list.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/ui-btn.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-friend.css">
+        <link rel="stylesheet" href="../css/ui-dis.css">
+        <link rel="stylesheet" href="../css/ui-mystyle.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+        <script src="../js/yy_pagenav.js">
+        </script>
+    </head>
+    <body class="um-vp" ontouchstart>
+        <!--列表开始-->
+        <div class="uba  b-gra c-wh us uc-n" id="bookList" style="margin:0.4em">
+        </div>
+        <!--列表结束-->
+        <div id="thume_cont" style="margin:0 15px;">
+            <div id="pagenav" style="margin:0 -15px;">
+            </div>
+        </div>
+    </body>
+    <script>
+        var pageCount = 10;
+        var gtotpage = 0;
+        var gcurpage = 0;
+        var now_search_type = 'book';//当前搜索的种类
+        var threadpage = 1;
+        var obj = {
+            pagenav: 'pagenav'
+        };
+        zy_init();
+        window.uexOnload = function(type){
+			uexWindow.cbConfirm = ConfirmSuccess;
+            if (!type) {
+                uexWindow.setBounce("1");
+                uexWindow.showBounceView("0", "#FFF", "0");
+                uexWindow.showBounceView("1", "#FFF", "0");
+            }
+            uexXmlHttpMgr.onData = httpSuccess;
+            uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+                alert("errorCode:" + errorCode + "\n" + "errorInfo:" + errorInfo);
+            }
+            
+            var server = "https://api.douban.com/v2/discussion/" + localStorage.discussion_id + "/comments";
+            uexWindow.toast(1, 5, "正在查询数据。。。", 0);
+            uexXmlHttpMgr.open(1, "GET", server, 40 * 1000);
+            uexXmlHttpMgr.send(1);
+        }
+        
+        function httpSuccess(opid, status, result){
+            if (status == 1) {
+                if (opid == 1) {
+                    var jsonData = eval("(" + result + ")");
+                    var html = '';
+                    var length = jsonData.comments.length;
+                    for (var i = 0; i < length; i++) {
+                        html += '<div ontouchstart="zy_touch(\'btn-act\')" class="uc-t c-m2 ubb ub b-gra t-bla ub-ac lis">' +
+                        '<div class="lis-th ub-img "><img class="reflect" src=\"' +
+                        jsonData.comments[i].author.avatar +
+                        '\"/></div>' +
+                        '<div class="ub-f1 ub ub-ver uinn"><div class="ulev1">' +
+                        jsonData.comments[i].author.name +
+                        '</div>' +
+                        '<div class="ulev-1 umh4 t-gra">' +
+                        jsonData.comments[i].created +
+                        '</div><div class="ulev-1 umh4 t-gra">' +
+                        jsonData.comments[i].content;
+                        if (jsonData.comments[i].author.id == localStorage.user_uid) {
+                            html += '<div class="ulev-1 tx-r" style="margin-top:0.4em;margin-bottom:0.6em" onclick="deleteD(' + jsonData.comments[i].id + ')">删除</div>';
+                        }
+                        html += '</div></div></div>';
+                    }
+                    html += '<div><div class="tx-l ulev1 ">你的回应...</div>' +
+                    '<div class="dis-send-content">' +
+                    '<textarea name="message" id="message" style="height: 7em;width:99%"></textarea></div>' +
+                    '<div class="btn  b-bla uinn5 c-blu c-m2 uc-a1 t-wh uinl" onclick="add()" style="margin:0.4em 0.4em 0.4em 80%">加上去</div></div>';
+                    $$("bookList").innerHTML = html;
+                    setPageNav(jsonData);
+                    uexXmlHttpMgr.close(opid);
+                    uexWindow.closeToast();
+                }else if(opid == 3){
+					uexXmlHttpMgr.close(opid);
+                    uexWindow.closeToast();
+					search();
+				}
+            }
+            else 
+                if (status == -1) {
+                    if (opid == 2) {
+                        uexXmlHttpMgr.close(opid);
+                        uexWindow.closeToast();
+                        search();
+                    }
+                    else {
+                        alert("网络超时");
+                    }
+                }
+        }
+        
+        function deleteD(comment_id){
+            localStorage.comment_id = comment_id;
+            var value = '确定;取消';
+            var mybtns = value.split(";");
+            uexWindow.confirm('提醒', '确定要删除留言？', mybtns);
+        }
+        
+        function ConfirmSuccess(opId, dataType, data){
+            var num = parseInt(data);
+            if (num == 0) {
+                var server = "https://api.douban.com/v2/discussion/" + localStorage.discussion_id + "/comment/" + localStorage.comment_id;
+                uexWindow.toast(3, 5, "正在删除数据。。。", 0);
+                uexXmlHttpMgr.open(3, "DELETE", encodeURI(server), 40 * 1000);
+                uexXmlHttpMgr.send(3);
+            }
+            else {
+                alert('取消');
+            }
+        }
+        
+        function setPageNav(jsonData){
+            var totalLength = jsonData.total;
+            if (totalLength % pageCount == 0) {
+                gtotpage = totalLength / pageCount
+            }
+            else 
+                if (gtotpage = totalLength / pageCount < 1) {
+                    gtotpage = 1;
+                }
+                else {
+                    gtotpage = parseInt(totalLength / pageCount) + 1;
+                }
+            gcurpage = threadpage;
+            if (gtotpage > 0) {
+                setpagenum(obj, threadpage, gtotpage, 1);
+                if ($$("pagenav").style.display == 'none') {
+                    $$("pagenav").style.display = 'block';
+                }
+            }
+            else {
+                $$("pagenav").style.display = 'none';
+            }
+        }
+        
+        function turnpage(cmd){
+            if (cmd == 0) 
+                threadpage = 1;
+            else 
+                if (cmd == -1) {
+                    if (gcurpage == 1) 
+                        return;
+                    threadpage = gcurpage - 1;
+                }
+                else 
+                    if (cmd == 1) {
+                        if (gtotpage > 0 && gcurpage == gtotpage) 
+                            return;
+                        threadpage = gcurpage + 1;
+                    }
+                    else 
+                        if (cmd == 2) 
+                            threadpage = gtotpage;
+                        else 
+                            if (cmd == 3) 
+                                threadpage = gcurpage;
+                            else 
+                                threadpage = 1;
+            search();
+        }
+        
+        function jumppage(){
+            var keycap = '确定,取消'.split(",");
+            uexWindow.cbPrompt = function(opId, dataType, data){
+                var objdata = eval('(' + data + ')');
+                if (objdata.num == 0) {
+                    var num = parseInt(objdata.value);
+                    if (0 < num && num <= gtotpage) {
+                        gcurpage = num;
+                        turnpage(3);
+                    }
+                    else {
+                        uexWindow.alert('提示', '超出最大访问页数！', '确定');
+                    }
+                }
+            }
+            uexWindow.prompt('请输入页码：', '请输入页码：', '', keycap);
+        }
+        
+        function add(){
+            var content = $$("message").value;
+            if (content == '') {
+                alert('内容不能为空！');
+            }
+            else {
+                var server = "https://api.douban.com/v2/discussion/" + localStorage.discussion_id + "/comments";
+                uexXmlHttpMgr.open(2, "POST", encodeURI(server), 40 * 1000);
+                uexWindow.toast(2, 5, "努力加上去。。。", 0);
+                uexXmlHttpMgr.setPostData(2, "0", "content", content);
+                uexXmlHttpMgr.send(2);
+            }
+        }
+        
+        function search(){
+            var server = "https://api.douban.com/v2/discussion/" + localStorage.discussion_id + "/comments?start=" + (threadpage - 1) * pageCount + "&count=" + pageCount;
+            uexWindow.toast(1, 5, "正在查询数据。。。", 0);
+            uexXmlHttpMgr.open(1, "GET", server, 40 * 1000);
+            uexXmlHttpMgr.send(1);
+        }
+    </script>
+</html>

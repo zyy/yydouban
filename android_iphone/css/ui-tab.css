@@ -1,0 +1,60 @@
+.tab
+{
+	height:3em;padding:0.2em 0.1em
+}
+
+input[type="radio"]:checked + div.tab-act
+{
+	background-color:rgba(255,255,255,0.1) !important;
+	border-radius:0.3em;
+	border: 0px;
+	background-image: none;
+}
+
+input[type="radio"] + div>div.tp-info{
+	background: url(res-apple/info-act.png) 50% 50% no-repeat;
+}
+
+input[type="radio"]:checked + div>div.tp-info{
+	background: url(res-apple/info-act.png) 50% 50% no-repeat;
+}
+
+input[type="radio"] + div>div.tp-menu{
+	background: url(res-apple/menu.png) 50% 50% no-repeat;
+}
+
+input[type="radio"]:checked + div>div.tp-menu{
+	background: url(res-apple/menu-act.png) 50% 50% no-repeat;
+}
+
+input[type="radio"] + div>div.tp-home{
+	background: url(images/icon_music.png) 50% 50% no-repeat;
+}
+
+input[type="radio"]:checked + div>div.tp-home{
+	background: url(images/icon_music.png) 50% 50% no-repeat;
+}
+
+input[type="radio"] + div>div.tp-set{
+	background: url(images/icon_movice.png) 50% 50% no-repeat;
+}
+
+input[type="radio"]:checked + div>div.tp-set{
+	background: url(images/icon_movice.png) 50% 50% no-repeat;
+}
+
+input[type="radio"] + div>div.tp-shop{
+	background: url(images/icon_miniblog.png) 50% 50% no-repeat;
+}
+
+input[type="radio"]:checked + div>div.tp-shop{
+	background: url(images/icon_miniblog.png) 50% 50% no-repeat;
+}
+
+input[type="radio"] + div>div.tp-talk{
+	background: url(images/icon_book.png) 50% 50% no-repeat;
+}
+
+input[type="radio"]:checked + div>div.tp-talk{
+	background: url(images/icon_book.png) 50% 50% no-repeat;
+}

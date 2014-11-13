@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="um landscape min-width-240px min-width-320px min-width-480px min-width-768px min-width-1024px">
+    <head>
+        <title></title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../css/ui-fold.css">
+        <link rel="stylesheet" href="../css/ui-input.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-img.css">
+        <link rel="stylesheet" href="../css/ui-res.css">
+        <link rel="stylesheet" href="../css/ui-list.css">
+        <link rel="stylesheet" href="../css/ui-base.css">
+        <link rel="stylesheet" href="../css/ui-box.css">
+        <link rel="stylesheet" href="../css/ui-color.css">
+        <link rel="stylesheet" href="../css/ui-btn.css">
+        <link rel="stylesheet" href="../css/ui-tab.css">
+        <link rel="stylesheet" href="../css/ui-mystyle.css">
+        <script src="../js/zy_control.js">
+        </script>
+        <script src="../js/zy_click.js">
+        </script>
+        <script src="../js/yy_pagenav.js">
+        </script>
+    </head>
+    <body class="um-vp" ontouchstart>
+        <!--列表开始-->
+        <div class="uba  b-gra c-wh us uc-n" id="diaryList">
+        </div>
+        <!--列表结束-->
+        <div id="thume_cont" style="margin:0 15px;">
+            <div id="pagenav" style="margin:0 -15px;">
+            </div>
+        </div>
+    </body>
+    <script>
+        var pageCount = 20;
+        var gtotpage = 0;
+        var gcurpage = 0;
+        var threadpage = 1;
+        var obj = {
+            pagenav: 'pagenav'
+        };
+        zy_init();
+        window.uexOnload = function(type){
+            uexWindow.cbConfirm = ConfirmSuccess;
+            if (!type) {
+                uexWindow.setBounce("1");
+                uexWindow.showBounceView("0", "#FFF", "0");
+                uexWindow.showBounceView("1", "#FFF", "0");
+            }
+            uexXmlHttpMgr.onData = httpSuccess;
+            uexWidgetOne.cbError = function(opCode, errorCode, errorInfo){
+                alert("errorCode:" + errorCode + "\n" + "errorInfo:" + errorInfo);
+            }
+            var server = "https://api.douban.com/v2/note/user_created/"+localStorage.user_uid+"?start=" + (threadpage - 1) * pageCount + "&count=" + pageCount;
+            uexWindow.toast(1, 5, "正在查询数据。。。", 0);
+            uexXmlHttpMgr.open(1, "GET", encodeURI(server), 40 * 1000);
+            uexXmlHttpMgr.send(1);
+        }
+        
+        function httpSuccess(opid, status, result){
+            uexWindow.closeToast();
+            if (status == 1) {
+                uexXmlHttpMgr.close(opid);
+                if (opid == 1) {
+                    var jsonData = eval("(" + result + ")");
+                    localStorage.diaries_result = result;
+                    var html = '';
+                    var length = jsonData.notes.length;
+                    for (var i = 0; i < length; i++) {
+                        html += '<div ontouchstart="zy_touch(\'btn-act\')" onclick = "detail(' + jsonData.notes[i].id + ')" class="uc-t c-m2 ubb ub b-gra t-bla ub-ac lis">' +
+                        '<div class="ub-f1 ub ub-ver uinn"><div class="ulev1">' +
+                        jsonData.notes[i].title +
+                        '</div><div class="ulev-1 umh4 t-gra">' +
+                        jsonData.notes[i].publish_time +
+                        '</div><div class="ulev-1 umh4 t-gra ut-s">' +
+                        jsonData.notes[i].summary +
+                        '</div><div class="ulev-1 umh4 t-gra">' +
+                        jsonData.notes[i].comments_count +
+                        '回应  ' +
+                        jsonData.notes[i].recs_count +
+                        '人浏览 > <a class="t-blu" onclick="edit_diary(' +
+                        i +
+                        ')">修改 ></a><a class="t-blu" onclick="delete_diary(' +
+                        jsonData.notes[i].id +
+                        ')">删除</a>' +
+                        '</div><div class="us uinl b-wh uba1 c-m1 c-blu uc-a2 t-wh ulev-1 uinn1" >' +
+                        '喜欢</div></div></div>';
+                    }
+                    $$("diaryList").innerHTML = html;
+                    var totalLength = jsonData.total;
+                    if (totalLength % 20 == 0) {
+                        gtotpage = totalLength / 20
+                    }
+                    else 
+                        if (gtotpage = totalLength / 20 < 1) {
+                            gtotpage = 1;
+                        }
+                        else {
+                            gtotpage = parseInt(totalLength / 20) + 1;
+                        }
+                    gcurpage = threadpage;
+                    setpagenum(obj, threadpage, gtotpage, 1);
+                    uexWindow.closeToast();
+                }
+                else 
+                    if (opid == 2) {
+                        search();
+                    }
+            }
+            else 
+                if (status == -1) {
+                    uexXmlHttpMgr.close(opid);
+                    alert("网络超时");
+                }
+        }
+        
+        function search(){
+            if (localStorage.authorization_code != null) {
+                var server = "https://api.douban.com/v2/note/user_created/"+localStorage.user_uid+"?start=" + (threadpage - 1) * pageCount + "&count=" + pageCount;
+                uexWindow.toast(1, 5, "正在查询数据。。。", 0);
+                uexXmlHttpMgr.open(1, "GET", encodeURI(server), 40 * 1000);
+                uexXmlHttpMgr.send(1);
+            }
+            else {
+                login();
+            }
+        }
+        
+        function login(){
+            uexWindow.onOAuthInfo = onAuth;
+            uexWindow.open("login", "0", "https://www.douban.com/service/auth2/auth?client_id=0ca14c051c65391925e3e40f552fab4b&redirect_uri=http://blog.csdn.net/yycoder&response_type=code", "", "", "", "1");
+        }
+        
+        function delete_diary(id){
+            localStorage.delete_diary_id = id;
+            var value = '确定;取消';
+            var mybtns = value.split(";");
+            uexWindow.confirm('提醒', '确定要删除这篇日记吗？', mybtns);
+        }
+        
+        function edit_diary(i){
+            if (i == 'add') {
+                localStorage.diary_state = 'add';
+            }
+            else {
+                localStorage.diary_state = 'edit';
+                localStorage.edit_diary_id = i;
+            }
+            var name = "diary_publish";
+            uexWindow.open(name, "0", "../diary/"+ name + ".html", "", "", "", 0);
+        }
+        
+        function ConfirmSuccess(opId, dataType, data){
+            var num = parseInt(data);
+            if (num == 0) {
+                var server = "https://api.douban.com/v2/note/" + localStorage.delete_diary_id;
+                uexWindow.toast(2, 5, "正在删除数据。。。", 0);
+                uexXmlHttpMgr.open(2, "DELETE", encodeURI(server), 40 * 1000);
+                uexXmlHttpMgr.send(2);
+            }
+            else {
+                alert('取消');
+            }
+        }
+        
+        function turnpage(cmd){
+            if (cmd == 0) 
+                threadpage = 1;
+            else 
+                if (cmd == -1) {
+                    if (gcurpage == 1) 
+                        return;
+                    threadpage = gcurpage - 1;
+                }
+                else 
+                    if (cmd == 1) {
+                        if (gtotpage > 0 && gcurpage == gtotpage) 
+                            return;
+                        threadpage = gcurpage + 1;
+                    }
+                    else 
+                        if (cmd == 2) 
+                            threadpage = gtotpage;
+                        else 
+                            if (cmd == 3) 
+                                threadpage = gcurpage;
+                            else 
+                                threadpage = 1;
+            search();
+        }
+        
+        function jumppage(){
+            var keycap = '确定,取消'.split(",");
+            uexWindow.cbPrompt = function(opId, dataType, data){
+                var objdata = eval('(' + data + ')');
+                if (objdata.num == 0) {
+                    var num = parseInt(objdata.value);
+                    if (0 < num && num <= gtotpage) {
+                        gcurpage = num;
+                        turnpage(3);
+                    }
+                    else {
+                        uexWindow.alert('提示', '超出最大访问页数！', '确定');
+                    }
+                }
+            }
+            uexWindow.prompt('请输入页码：', '请输入页码：', '', keycap);
+        }
+    </script>
+</html>
